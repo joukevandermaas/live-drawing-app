@@ -20,7 +20,8 @@ namespace FIODraw
         public static IWebHost BuildWebHost(string[] args) {
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls($"http://0.0.0.0:5050/draw")
+                .UseUrls($"http://0.0.0.0:5050")
+                .UsePathBase('/draw')
                 .Build();
         }
     }
