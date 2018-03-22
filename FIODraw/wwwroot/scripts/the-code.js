@@ -170,7 +170,7 @@ document.onkeyup = (e) => {
     }
     if (e.key === 'd') {;
         let data = canvas.toDataURL('image/png');
-        let url = 'https://8168dc7e.ngrok.io:2469/sendPicture/';
+        let url = 'https://8168dc7e.ngrok.io/sendPicture/';
 
         return fetch(url, {
             body: data, // must match 'Content-Type' header
