@@ -9,6 +9,14 @@ let lastY = -1;
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const connection = new signalR.HubConnection('/draw');
+
+connection.on('draw', (prevX, prevY, x, y) => {
+    drawLine(prevX, prevY, x, y);
+});
+
+connection.start();
+
 function drawLine(x1, y1, x2, y2) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -48,6 +56,7 @@ function handleMove(e) {
         let [x, y] = normalizeEvent(e);
         
         drawLine(lastX, lastY, x, y);
+        connection.invoke('draw', lastX, lastY, x, y);
 
         lastX = x;
         lastY = y;
