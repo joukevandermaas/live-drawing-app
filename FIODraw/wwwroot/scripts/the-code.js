@@ -153,20 +153,27 @@ window.onresize = () => {
     connection.invoke('redraw');
 }
 
+function toggleRainbow() {
+    rainbow = !rainbow;
+    color = origColor;
+    components = {
+        r: 255,
+        g: 0,
+        b: 0
+    }
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    connection.invoke('clear');
+}
+
 document.onkeyup = (e) => {
     if (e.key === 'k') {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        connection.invoke('clear');
-
+        clearCanvas();
     }
     if (e.key === 'r') {
-        rainbow = !rainbow;
-        color = origColor;
-        components = {
-            r: 255,
-            g: 0,
-            b: 0
-        }
+        toggleRainbow();
     }
     if (e.key === 'd') {;
         let data = canvas.toDataURL('image/png');
