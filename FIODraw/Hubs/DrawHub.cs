@@ -46,7 +46,7 @@ namespace Draw.Hubs
 		{
 			using (var content = new StringContent(base64Image, Encoding.UTF8, "text/plain"))
 			using (HttpResponseMessage response = await httpClient.PostAsync("https://8168dc7e.ngrok.io/sendPicture/", content)) {
-				// gud kush
+				// gud kush.
 			}
 		}
 
