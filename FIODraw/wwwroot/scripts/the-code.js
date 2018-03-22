@@ -21,7 +21,7 @@ let color = '';
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const connection = new signalR.HubConnection('/draw/draw');
+const connection = new signalR.HubConnection('/draw');
 
 connection.on('draw', (prevX, prevY, x, y, color) => {
     drawLine(prevX, prevY, x, y, color);
