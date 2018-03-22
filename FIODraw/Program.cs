@@ -17,10 +17,18 @@ namespace FIODraw
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+        public static IWebHost BuildWebHost(string[] args) {
+            var port = "5050";
+
+            if (Environment.GetEnvironmentVariable("USER") == "kitty")
+            {
+                port = "80";
+            }
+
+            return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls("http://localhost:5050")
+                .UseUrls($"http://0.0.0.0:{port}")
                 .Build();
+        }
     }
 }

@@ -28,6 +28,10 @@ namespace Draw.Hubs
 			return Clients.Others.SendAsync("draw", oldX, oldY, newX, newY, color);
 		}
 
+		public Task Redraw() {
+			return Clients.Caller.SendAsync("redraw", lines);
+		}
+
 		public Task Clear()
 		{
 			lines.Clear();

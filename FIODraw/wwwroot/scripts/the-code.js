@@ -44,6 +44,16 @@ connection.on('initialize', (lines, c) => {
     }
 });
 
+connection.on('redraw', (lines) => {
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        let from = line.from;
+        let to = line.to;
+
+        drawLine(from.x, from.y, to.x, to.y, line.color);
+    }
+});
+
 connection.start();
 
 
@@ -57,13 +67,17 @@ function drawLine(x1, y1, x2, y2, color) {
 }
 
 function normalizeEvent(e) {   
+    let rect = canvas.getBoundingClientRect();
     if (e.changedTouches) {
         return [
-            e.changedTouches[0].clientX,
-            e.changedTouches[0].clientY
+            e.changedTouches[0].clientX - rect.left,
+            e.changedTouches[0].clientY - rect.top
         ]
     } else {
-        return [ e.clientX, e.clientY ];
+        return [ 
+            e.clientX - rect.left,
+            e.clientY - rect.top
+        ];
     }
 }
 
@@ -131,6 +145,14 @@ canvas.addEventListener("touchstart", handleStart, false);
 canvas.addEventListener("touchend", handleEnd, false);
 canvas.addEventListener("touchmove", handleMove, false);
 
+window.onresize = () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    connection.invoke('redraw');
+}
+
 document.onkeyup = (e) => {
     if (e.key === 'k') {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -146,7 +168,19 @@ document.onkeyup = (e) => {
             b: 0
         }
     }
-    if (e.key === 'd') {
-        document.body.innerHTML = canvas.toDataURL('image/png');
+    if (e.key === 'd') {;
+        let data = canvas.toDataURL('image/png');
+        let url = 'https://8168dc7e.ngrok.io:2469/sendPicture/';
+
+        return fetch(url, {
+            body: data, // must match 'Content-Type' header
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+              'user-agent': 'Mozilla/4.0 MDN Example',
+              'content-type': 'application/x-www-form-urlencoded'
+            },
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        })
     }
 }
