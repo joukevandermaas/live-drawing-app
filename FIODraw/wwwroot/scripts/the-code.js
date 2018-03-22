@@ -7,21 +7,24 @@ let isMouseDown = false;
 
 let lastX = -1;
 let lastY = -1;
+let color = '';
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
 const connection = new signalR.HubConnection('/draw');
 
-connection.on('draw', (prevX, prevY, x, y) => {
-    drawLine(prevX, prevY, x, y);
+connection.on('draw', (prevX, prevY, x, y, color) => {
+    drawLine(prevX, prevY, x, y, color);
 });
 
 connection.on('clear', () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 });
 
-connection.on('initialize', (lines) => {
+connection.on('initialize', (lines, c) => {
+    color = c;
+
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
         let from = line.from;
@@ -31,12 +34,11 @@ connection.on('initialize', (lines) => {
     }
 });
 
-connection.start().then(() => {
-    connection.invoke('initialize');
-});
+connection.start();
 
 
-function drawLine(x1, y1, x2, y2) {
+function drawLine(x1, y1, x2, y2, color) {
+    ctx.strokeStle = color;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -72,7 +74,7 @@ function handleMove(e) {
         let [x, y] = normalizeEvent(e);
         
         drawLine(lastX, lastY, x, y);
-        connection.invoke('draw', lastX, lastY, x, y);
+        connection.invoke('draw', lastX, lastY, x, y, color);
 
         lastX = x;
         lastY = y;
