@@ -17,9 +17,6 @@ namespace FIODraw
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-    		app.UsePathBase("/draw");
-
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -28,7 +25,7 @@ namespace FIODraw
 			app.UseFileServer();
 			app.UseSignalR(routes =>
 			{
-				routes.MapHub<DrawHub>("/draw");
+				routes.MapHub<DrawHub>("/");
 			});
 		}
     }
