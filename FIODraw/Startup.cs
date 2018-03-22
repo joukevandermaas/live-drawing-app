@@ -25,7 +25,7 @@ namespace FIODraw
 			app.UseFileServer();
 			app.UseSignalR(routes =>
 			{
-				routes.MapHub<DrawHub>("/");
+				routes.MapHub<DrawHub>("/draw");
 			});
 		}
     }
