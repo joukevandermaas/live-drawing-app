@@ -31,9 +31,7 @@ namespace Draw.Hubs
 			return Clients.Others.SendAsync("draw", oldX, oldY, newX, newY, color);
 		}
 
-		public Task Redraw() {
-			return Clients.Caller.SendAsync("redraw", lines);
-		}
+		public Task Redraw() => Clients.Caller.SendAsync("redraw", lines);
 
 		public Task Clear()
 		{
@@ -46,7 +44,6 @@ namespace Draw.Hubs
 		{
 			using (var content = new StringContent(base64Image, Encoding.UTF8, "text/plain"))
 			using (HttpResponseMessage response = await httpClient.PostAsync("https://8168dc7e.ngrok.io/sendPicture/", content)) {
-				// gud kush.
 			}
 		}
 
