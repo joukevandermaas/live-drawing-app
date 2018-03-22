@@ -30,7 +30,7 @@ connection.on('initialize', (lines, c) => {
         let from = line.from;
         let to = line.to;
 
-        drawLine(from.x, from.y, to.x, to.y);
+        drawLine(from.x, from.y, to.x, to.y, line.color);
     }
 });
 
@@ -38,7 +38,8 @@ connection.start();
 
 
 function drawLine(x1, y1, x2, y2, color) {
-    ctx.strokeStle = color;
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 3;
     ctx.beginPath();
     ctx.moveTo(x1, y1);
     ctx.lineTo(x2, y2);
@@ -73,7 +74,7 @@ function handleMove(e) {
     if (isMouseDown) {
         let [x, y] = normalizeEvent(e);
         
-        drawLine(lastX, lastY, x, y);
+        drawLine(lastX, lastY, x, y, color);
         connection.invoke('draw', lastX, lastY, x, y, color);
 
         lastX = x;

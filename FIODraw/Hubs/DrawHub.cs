@@ -13,9 +13,14 @@ namespace Draw.Hubs
 		private static readonly List<Line> lines = new List<Line>();
 		private static readonly Looper<Color> colors = new Looper<Color>(new Color[]
 		{
-			Color.FromRgb(255, 0, 0),
-			Color.FromRgb(0, 255, 0),
-			Color.FromRgb(0, 0, 255)
+			Color.FromRgb(227, 2, 127),
+			Color.FromRgb(255, 255, 0),
+			Color.FromRgb(1, 102, 179),
+			Color.FromRgb(0, 159, 142),
+			Color.FromRgb(176, 42, 48),
+			Color.FromRgb(130, 107, 99),
+			Color.FromRgb(221, 114, 31),
+			Color.FromRgb(103, 174, 62),
 		});
 
 		public Task Draw(int oldX, int oldY, int newX, int newY, string color)
@@ -30,6 +35,6 @@ namespace Draw.Hubs
 			return Clients.Others.SendAsync("clear");
 		}
 
-		public override Task OnConnectedAsync() => Clients.Caller.SendAsync("initialize", lines, colors.GetValue());
+		public override Task OnConnectedAsync() => Clients.Caller.SendAsync("initialize", lines, colors.GetValue().ToHexadecimalString());
 	}
 }
