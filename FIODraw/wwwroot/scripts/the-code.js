@@ -163,11 +163,14 @@ function toggleRainbow() {
     }
 }
 
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    connection.invoke('clear');
+}
+
 document.onkeyup = (e) => {
     if (e.key === 'k') {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        connection.invoke('clear');
-
+        clearCanvas();
     }
     if (e.key === 'r') {
         toggleRainbow();
