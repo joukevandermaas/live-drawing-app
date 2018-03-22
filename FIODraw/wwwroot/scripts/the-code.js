@@ -170,17 +170,7 @@ document.onkeyup = (e) => {
     }
     if (e.key === 'd') {;
         let data = canvas.toDataURL('image/png');
-        let url = 'https://8168dc7e.ngrok.io/sendPicture/';
 
-        return fetch(url, {
-            body: data, // must match 'Content-Type' header
-            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: 'same-origin', // include, same-origin, *omit
-            headers: {
-              'user-agent': 'Mozilla/4.0 MDN Example',
-              'content-type': 'application/x-www-form-urlencoded'
-            },
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        })
+        connection.invoke('image', data);
     }
 }
