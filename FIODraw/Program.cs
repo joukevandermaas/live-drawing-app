@@ -21,7 +21,6 @@ namespace FIODraw
             return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseUrls($"http://0.0.0.0:5050")
-                .UsePathBase("/draw")
                 .Build();
         }
     }
