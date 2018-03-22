@@ -3,6 +3,8 @@ using FIODraw.Models;
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Draw.Hubs
@@ -10,6 +12,7 @@ namespace Draw.Hubs
 	public class DrawHub
 		: Hub
 	{
+		private static readonly HttpClient httpClient = new HttpClient();
 		private static readonly List<Line> lines = new List<Line>();
 		private static readonly Looper<Color> colors = new Looper<Color>(new Color[]
 		{
@@ -36,6 +39,15 @@ namespace Draw.Hubs
 		{
 			lines.Clear();
 			return Clients.Others.SendAsync("clear");
+		}
+
+		[HubMethodName("image")]
+		public async Task SendImageToPythonApi(string base64Image)
+		{
+			using (var content = new StringContent(base64Image, Encoding.UTF8, "application/json"))
+			using (HttpResponseMessage response = await httpClient.PostAsync("https://8168dc7e.ngrok.io/sendPicture/", content)) {
+				// gud kush
+			}
 		}
 
 		public override Task OnConnectedAsync() => Clients.Caller.SendAsync("initialize", lines, colors.GetValue().ToHexadecimalString());
