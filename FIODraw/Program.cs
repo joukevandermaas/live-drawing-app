@@ -20,7 +20,7 @@ namespace FIODraw
         public static IWebHost BuildWebHost(string[] args) {
             var port = "5050";
 
-            if (Environment.GetEnvironmentVariable("USER") == "kitty")
+            if (Environment.GetEnvironmentVariable("KITTY") == "kitty")
             {
                 port = "80";
             }
