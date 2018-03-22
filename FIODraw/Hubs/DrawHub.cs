@@ -40,7 +40,7 @@ namespace Draw.Hubs
 		}
 
 		[HubMethodName("image")]
-		public async Task SendImageToPythonApi(string base64Image)
+		public async Task SendImage(string base64Image)
 		{
 			using (var content = new StringContent(base64Image, Encoding.UTF8, "text/plain"))
 			using (HttpResponseMessage response = await httpClient.PostAsync("https://8168dc7e.ngrok.io/sendPicture/", content)) {
