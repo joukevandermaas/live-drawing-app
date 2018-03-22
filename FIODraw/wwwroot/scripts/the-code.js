@@ -3,10 +3,19 @@
 const canvas = document.getElementById("this-is-it");
 const ctx = canvas.getContext('2d');
 
-let isMouseDown = false;
+let mouseDown = false;
+let rainbow = false;
+
+let components = {
+    r: 255,
+    g: 0,
+    b: 0
+}
 
 let lastX = -1;
 let lastY = -1;
+
+let origColor = '';
 let color = '';
 
 canvas.width = window.innerWidth;
@@ -24,6 +33,7 @@ connection.on('clear', () => {
 
 connection.on('initialize', (lines, c) => {
     color = c;
+    origColor = c;
 
     for (let i = 0; i < lines.length; i++) {
         let line = lines[i];
@@ -49,8 +59,8 @@ function drawLine(x1, y1, x2, y2, color) {
 function normalizeEvent(e) {   
     if (e.changedTouches) {
         return [
-            x = e.changedTouches[0].clientX,
-            y = e.changedTouches[0].clientY
+            e.changedTouches[0].clientX,
+            e.changedTouches[0].clientY
         ]
     } else {
         return [ e.clientX, e.clientY ];
@@ -61,19 +71,50 @@ function handleStart(e) {
     e.preventDefault();
     let positions = normalizeEvent(e);
 
-    isMouseDown = true;
+    mouseDown = true;
     lastX = positions[0];
     lastY = positions[1];
 }
 
 function handleEnd() {    
-    isMouseDown = false;
+    mouseDown = false;
 }
 
 function handleMove(e) {
-    if (isMouseDown) {
+    if (mouseDown) {
         let [x, y] = normalizeEvent(e);
+
+        if (rainbow) {
+            let { r, g, b } = components;
+            let step = 5;
+
+            if (r >= 255 || (r > 0 && g > 0)) {
+                components.r -= step;
+                components.g += step;
+            }
+            if (g >= 255 || (g > 0 && b > 0)) {
+                components.g -= step;
+                components.b += step;
+            }           
+            if (b >= 255 || (b > 0 && r > 0)) {
+                components.b -= step;
+                components.r += step;
+            }
+
+            for (let comp in components) {
+                if (components[comp] > 255) {
+                    components[comp] = 255;
+                }
+                if (components[comp] < 0) {
+                    components[comp] = 0;
+                }
+            }
+
+
+            color = `rgb(${components.r}, ${components.g}, ${components.b})`;
+        }
         
+
         drawLine(lastX, lastY, x, y, color);
         connection.invoke('draw', lastX, lastY, x, y, color);
 
@@ -95,6 +136,15 @@ document.onkeyup = (e) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         connection.invoke('clear');
 
+    }
+    if (e.key === 'r') {
+        rainbow = !rainbow;
+        color = origColor;
+        components = {
+            r: 255,
+            g: 0,
+            b: 0
+        }
     }
     if (e.key === 'd') {
         document.body.innerHTML = canvas.toDataURL('image/png');

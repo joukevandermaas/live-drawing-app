@@ -14,7 +14,6 @@ namespace Draw.Hubs
 		private static readonly Looper<Color> colors = new Looper<Color>(new Color[]
 		{
 			Color.FromRgb(227, 2, 127),
-			Color.FromRgb(255, 255, 0),
 			Color.FromRgb(1, 102, 179),
 			Color.FromRgb(0, 159, 142),
 			Color.FromRgb(176, 42, 48),
