@@ -1,3 +1,5 @@
+"use strict"
+
 const canvas = document.getElementById("this-is-it");
 const ctx = canvas.getContext('2d');
 
@@ -15,7 +17,24 @@ connection.on('draw', (prevX, prevY, x, y) => {
     drawLine(prevX, prevY, x, y);
 });
 
-connection.start();
+connection.on('clear', () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+});
+
+connection.on('initialize', (lines) => {
+    for (let i = 0; i < lines.length; i++) {
+        let line = lines[i];
+        let from = line.from;
+        let to = line.to;
+
+        drawLine(from.x, from.y, to.x, to.y);
+    }
+});
+
+connection.start().then(() => {
+    connection.invoke('initialize');
+});
+
 
 function drawLine(x1, y1, x2, y2) {
     ctx.beginPath();
@@ -24,27 +43,24 @@ function drawLine(x1, y1, x2, y2) {
     ctx.stroke();
 }
 
-function normalizeEvent(e) {
-    let x, y;
-
+function normalizeEvent(e) {   
     if (e.changedTouches) {
-        x = e.changedTouches[0].clientX;
-        y = e.changedTouches[0].clientY;
+        return [
+            x = e.changedTouches[0].clientX,
+            y = e.changedTouches[0].clientY
+        ]
     } else {
-        x = e.clientX;
-        y = e.clientY;
+        return [ e.clientX, e.clientY ];
     }
-
-    return [x, y];
 }
 
 function handleStart(e) {
     e.preventDefault();
-    let [x, y] = normalizeEvent(e);
+    let positions = normalizeEvent(e);
 
     isMouseDown = true;
-    lastX = x;
-    lastY = y;
+    lastX = positions[0];
+    lastY = positions[1];
 }
 
 function handleEnd() {    
@@ -70,3 +86,14 @@ canvas.onmousemove = handleMove;
 canvas.addEventListener("touchstart", handleStart, false);
 canvas.addEventListener("touchend", handleEnd, false);
 canvas.addEventListener("touchmove", handleMove, false);
+
+document.onkeyup = (e) => {
+    if (e.key === 'k') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        connection.invoke('clear');
+
+    }
+    if (e.key === 'd') {
+        document.body.innerHTML = canvas.toDataURL('image/png');
+    }
+}

@@ -8,7 +8,7 @@ namespace Draw.Hubs
 	public class DrawHub
 		: Hub
 	{
-		private readonly List<Line> lines = new List<Line>();
+		private static readonly List<Line> lines = new List<Line>();
 
 		public Task Draw(int oldX, int oldY, int newX, int newY)
 		{
