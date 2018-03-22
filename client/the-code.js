@@ -70,3 +70,12 @@ canvas.onmousemove = handleMove;
 canvas.addEventListener("touchstart", handleStart, false);
 canvas.addEventListener("touchend", handleEnd, false);
 canvas.addEventListener("touchmove", handleMove, false);
+
+document.onkeyup = (e) => {
+    if (e.key === 'k') {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);;
+    }
+    if (e.key === 'd') {
+        document.body.innerHTML = canvas.toDataURL('image/png');
+    }
+}
